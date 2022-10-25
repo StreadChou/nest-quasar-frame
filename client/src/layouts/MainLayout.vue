@@ -1,102 +1,109 @@
 <template>
-    <q-layout view="lHh Lpr lFf">
-        <q-header elevated>
-            <q-toolbar>
-                <q-btn
-                    flat
-                    dense
-                    round
-                    icon="menu"
-                    aria-label="Menu"
-                    @click="toggleLeftDrawer"
-                />
+    <q-layout view="hHh Lpr lff" class="bg-grey-1">
+        <q-header elevated class="bg-white text-grey-8 q-pa-none" height-hint="58">
+            <q-toolbar class="q-pa-none">
+                <LogoSection v-if="$q.screen.gt.sm"></LogoSection>
 
-                <q-toolbar-title>
-                    Quasar App
-                </q-toolbar-title>
+                <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" aria-label="Menu" icon="menu"
+                       class="toggle"/>
+                <q-space/>
 
-                <div>Quasar v{{ $q.version }}</div>
+                <UserAvatar/>
             </q-toolbar>
         </q-header>
+        <q-drawer v-model="leftDrawerOpen" show-if-above :width="220">
+            <q-scroll-area class="fit menu">
+                <q-list>
+                    <LogoSection v-if="!$q.screen.gt.sm"></LogoSection>
+                    <q-item class="sub-menu" v-for="link in globalStore.navigation_main" :key="link.text"
+                            :to="link.href" v-ripple
+                            clickable>
+                        <q-item-section avatar>
+                            <q-icon :name="link.icon" size="18px" :class="link.icon_class"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label class="text-white">{{ link.text }}</q-item-label>
+                        </q-item-section>
+                    </q-item>
 
-        <q-drawer
-            v-model="leftDrawerOpen"
-            show-if-above
-            bordered
-        >
-            <q-list>
-                <q-item-label
-                    header
-                >
-                    Essential Links
-                </q-item-label>
+                    <q-item-label header class="text-weight-bold text-uppercase">
+                        更多功能请遵循以下
+                    </q-item-label>
 
-                <EssentialLink
-                    v-for="link in essentialLinks"
-                    :key="link.title"
-                    v-bind="link"
-                />
-            </q-list>
+                    <q-item class="text-white" v-for="link in globalStore.navigation_more" :key="link.text" v-ripple
+                            clickable
+                            :to="link.href">
+                        <q-item-section avatar>
+                            <q-icon color="grey" size="18px" :name="link.icon"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>{{ link.text }}</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+
+                    <q-item-label header class="text-weight-bold text-uppercase q-pb-none q-pt-sm">
+                        管理员功能
+                    </q-item-label>
+
+                    <q-item class="text-white" v-for="link in globalStore.navigation_admin" :key="link.text" v-ripple
+                            clickable
+                            :to="link.href">
+                        <q-item-section avatar>
+                            <q-icon color="grey" size="18px" :name="link.icon"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>{{ link.text }}</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                    <q-separator class="q-mt-md q-mb-lg"/>
+                    <div class="q-px-md text-grey-9">
+                        <div class="row items-center q-gutter-x-sm q-gutter-y-xs">
+                            <a v-for="link in globalStore.navigation_footer" :key="link.text" class="footer-link"
+                               :href="link.href">
+                                {{ link.text }}
+                            </a>
+                        </div>
+                    </div>
+                </q-list>
+            </q-scroll-area>
         </q-drawer>
-
         <q-page-container>
             <router-view/>
         </q-page-container>
     </q-layout>
 </template>
 
-<script setup lang="ts">
+
+<script lang="ts" setup>
 import {ref} from 'vue';
-import EssentialLink, {EssentialLinkProps} from 'components/EssentialLink.vue';
+import LogoSection from "./components/LogoSection.vue";
+import UserAvatar from "layouts/components/UserAvatar.vue";
+import {useGlobalStore} from "stores/global.store";
 
-const essentialLinks: EssentialLinkProps[] = [
-    {
-        title: 'Docs',
-        caption: 'quasar.dev',
-        icon: 'school',
-        link: 'https://quasar.dev'
-    },
-    {
-        title: 'Github',
-        caption: 'github.com/quasarframework',
-        icon: 'code',
-        link: 'https://github.com/quasarframework'
-    },
-    {
-        title: 'Discord Chat Channel',
-        caption: 'chat.quasar.dev',
-        icon: 'chat',
-        link: 'https://chat.quasar.dev'
-    },
-    {
-        title: 'Forum',
-        caption: 'forum.quasar.dev',
-        icon: 'record_voice_over',
-        link: 'https://forum.quasar.dev'
-    },
-    {
-        title: 'Twitter',
-        caption: '@quasarframework',
-        icon: 'rss_feed',
-        link: 'https://twitter.quasar.dev'
-    },
-    {
-        title: 'Facebook',
-        caption: '@QuasarFramework',
-        icon: 'public',
-        link: 'https://facebook.quasar.dev'
-    },
-    {
-        title: 'Quasar Awesome',
-        caption: 'Community Quasar projects',
-        icon: 'favorite',
-        link: 'https://awesome.quasar.dev'
-    }
-];
+const leftDrawerOpen = ref(false);
+const globalStore = useGlobalStore();
 
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer() {
-    leftDrawerOpen.value = !leftDrawerOpen.value
-}
 </script>
+
+
+<style lang="sass">
+.footer-link
+    color: inherit
+    text-decoration: none
+    font-weight: 500
+    font-size: .75rem
+
+    &:hover
+        color: #FFF
+
+.menu
+    background: #181f24
+
+.sub-menu
+    background: #232c32
+
+.toggle
+    margin-left: 15px
+</style>

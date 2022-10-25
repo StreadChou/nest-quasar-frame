@@ -25,6 +25,7 @@ module.exports = configure(function (/* ctx */) {
         boot: [
 
             'axios',
+            'helper',
         ],
 
         // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -62,7 +63,7 @@ module.exports = configure(function (/* ctx */) {
 
             // publicPath: '/',
             // analyze: true,
-            // env: {},
+            env: require('dotenv').config().parsed
             // rawDefine: {}
             // ignorePublicFolder: true,
             // minify: false,
@@ -99,7 +100,12 @@ module.exports = configure(function (/* ctx */) {
             // directives: [],
 
             // Quasar plugins
-            plugins: []
+            plugins: [
+                'Cookies',
+                'Notify',
+                'Dialog',
+                'Loading',
+            ]
         },
 
         // animations: 'all', // --- includes all animations

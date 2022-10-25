@@ -1,1 +1,25 @@
 // app global css in SCSS form
+
+@import "quasar.variables";
+
+a {
+    text-decoration: none;
+    color: $primary;
+}
+
+a:hover, a:visited, a:link, a:active {
+}
+
+
+.primary-to-secondary-bg-15deg {
+    background: $secondary; /* fallback for old browsers */
+    background: -webkit-linear-gradient(15deg, $primary, $secondary); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(15deg, $primary, $secondary); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.secondary-to-primary-bg-15deg {
+    background: $primary; /* fallback for old browsers */
+    background: -webkit-linear-gradient(15deg, $secondary, $primary); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(15deg, $secondary, $primary); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+

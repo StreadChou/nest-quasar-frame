@@ -5,7 +5,8 @@ import {
     createWebHashHistory,
     createWebHistory,
 } from 'vue-router';
-
+import {Cookies} from 'quasar'
+import {AuthBeforeEach} from "src/router/auth";
 import routes from './routes';
 
 /*
@@ -17,7 +18,7 @@ import routes from './routes';
  * with the Router instance.
  */
 
-export default route(function (/* { store, ssrContext } */) {
+export default route(function ({}) {
     const createHistory = process.env.SERVER
         ? createMemoryHistory
         : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
@@ -31,6 +32,10 @@ export default route(function (/* { store, ssrContext } */) {
         // quasar.conf.js -> build -> publicPath
         history: createHistory(process.env.VUE_ROUTER_BASE),
     });
+
+    Router.beforeEach((to, from, next) => {
+        return AuthBeforeEach(Cookies, to, from, next);
+    })
 
     return Router;
 });
